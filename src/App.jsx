@@ -174,7 +174,7 @@ export default function Portfolio() {
             Ashwin Thapa
           </h1>
           <p className="text-xl md:text-2xl mb-4 text-gray-600 dark:text-gray-300">
-            Full Stack Developer & UI/UX Enthusiast
+            Devoloper in training & UI/UX Enthusiast
           </p>
           <p className="text-lg mb-8 text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
             Crafting elegant solutions to complex problems. Passionate about building scalable applications that deliver exceptional user experiences.
