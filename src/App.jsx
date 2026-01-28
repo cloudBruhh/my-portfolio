@@ -132,6 +132,14 @@ export default function Portfolio() {
       results: 'Enhanced understanding of Python programming and its applications',
       link: '#',
       github: 'https://github.com/cloudBruhh/Python-programming-'
+    },
+    {
+      title: 'This Portfolio Website',
+      description: 'just in case someone wants to see the code behind this portfolio website or wants to make a similar one.',
+      tools: ['React', 'Tailwind CSS'],
+      results: 'Well-structured and visually appealing portfolio website, simplistic and aesthetic design',
+      link: '#',
+      github: 'https://github.com/cloudBruhh/my-portfolio'
     }
   ];
 
