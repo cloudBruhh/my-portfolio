@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Download, Mail, Linkedin, Github, ExternalLink, Moon, Sun, Code, Briefcase, GraduationCap, Target } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState('');
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +36,33 @@ export default function Portfolio() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMenuOpen(false);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus('sending');
+
+    try {
+      const result = await emailjs.send(
+        'service_wsx4nsh',      // Replace with your Service ID
+        'template_omaz1it',     // Replace with your Template ID
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message
+        },
+        'C-1JVduTWhtFYUQHN'       // Replace with your Public Key
+      );
+
+      if (result.text === 'OK') {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        alert('Message sent successfully! I will get back to you soon.');
+      }
+    } catch (error) {
+      setFormStatus('error');
+      alert('Failed to send message. Please try again or email me directly.');
+      console.error('EmailJS Error:', error);
     }
   };
 
@@ -210,7 +241,7 @@ export default function Portfolio() {
                 Professional Summary
               </h3>
               <p className={`mb-6 leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Results-driven software engineer with 6+ years of experience building scalable web applications. Specialized in modern JavaScript frameworks and cloud technologies. Committed to writing clean, maintainable code and delivering high-quality solutions.
+                I am just a kid learning to build years of experience building scalable web applications.Always a yearner and am I yearn for my improvement. Committed to writing clean, maintainable code and delivering high-quality solutions.
               </p>
             </div>
             <div>
@@ -222,13 +253,6 @@ export default function Portfolio() {
                 <div>
                   <p className="font-semibold">Bachelor of Science in Computer Science and Information Technology</p>
                   <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Currently Pursuing, Asian School of Management and Technology</p>
-                </div>
-                <div>
-                  <p className="font-semibold">Certifications</p>
-                  <ul className={`list-disc list-inside ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <li>AWS Certified Developer</li>
-                    <li>Networking</li>
-                  </ul>
                 </div>
               </div>
             </div>
@@ -362,48 +386,57 @@ export default function Portfolio() {
               </div>
             </div>
             <div>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block mb-2 font-medium">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
-                      } focus:outline-none`}
-                    placeholder="Your name"
-                  />
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block mb-2 font-medium">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
+                        } focus:outline-none`}
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block mb-2 font-medium">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
+                        } focus:outline-none`}
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block mb-2 font-medium">Message</label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      required
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
+                        } focus:outline-none resize-none`}
+                      placeholder="Your message..."
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={formStatus === 'sending'}
+                    className={`w-full py-3 rounded-lg font-semibold transition-all ${isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {formStatus === 'sending' ? 'Sending...' : 'Send Message'}
+                  </button>
                 </div>
-                <div>
-                  <label htmlFor="email" className="block mb-2 font-medium">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
-                      } focus:outline-none`}
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block mb-2 font-medium">Message</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className={`w-full px-4 py-2 rounded-lg border transition-colors ${isDarkMode ? 'bg-gray-800 border-gray-700 focus:border-blue-500' : 'bg-white border-gray-300 focus:border-blue-600'
-                      } focus:outline-none resize-none`}
-                    placeholder="Your message..."
-                  />
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    alert('Message sent! (Demo only)');
-                  }}
-                  className={`w-full py-3 rounded-lg font-semibold transition-all ${isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}
-                >
-                  Send Message
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
