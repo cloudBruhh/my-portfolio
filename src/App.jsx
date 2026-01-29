@@ -249,7 +249,7 @@ export default function Portfolio() {
                 Professional Summary
               </h3>
               <p className={`mb-6 leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                I am just a kid learning to build years of experience building scalable web applications.Always a yearner and am I yearn for my improvement. Committed to writing clean, maintainable code and delivering high-quality solutions.
+                I am just a kid learning to build years of experience building scalable web applications.Always a yearner and  I yearn for  improvement. Committed to writing clean, maintainable code and delivering high-quality solutions.
               </p>
             </div>
             <div>
