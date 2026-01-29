@@ -1,19 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Download, Mail, Linkedin, Github, ExternalLink, Moon, Sun, Code, Briefcase, GraduationCap, Target } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, Download, Mail, Linkedin, Github, ExternalLink, Moon, Sun, Code, Briefcase, GraduationCap, Target, ChevronUp, Sparkles, Award, Clock, MapPin } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Persist dark mode preference
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [activeSection, setActiveSection] = useState('home');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formStatus, setFormStatus] = useState('');
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [typedText, setTypedText] = useState('');
+  const [visibleSections, setVisibleSections] = useState(new Set());
 
+  const roles = ['Developer in Training', 'UI/UX Enthusiast', 'Problem Solver', 'Lifelong Learner'];
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  // Save dark mode preference
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  // Loading screen
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Typing effect for roles
+  useEffect(() => {
+    const role = roles[roleIndex];
+    let charIndex = 0;
+    setTypedText('');
+    
+    const typeInterval = setInterval(() => {
+      if (charIndex <= role.length) {
+        setTypedText(role.slice(0, charIndex));
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+        setTimeout(() => {
+          setRoleIndex((prev) => (prev + 1) % roles.length);
+        }, 2000);
+      }
+    }, 100);
+
+    return () => clearInterval(typeInterval);
+  }, [roleIndex]);
+
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('section').forEach((section) => {
+      observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, [isLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['home', 'about', 'experience', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 100;
+
+      setShowScrollTop(window.scrollY > 500);
 
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -38,30 +102,33 @@ export default function Portfolio() {
       setIsMenuOpen(false);
     }
   };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('sending');
 
     try {
       const result = await emailjs.send(
-        'service_wsx4nsh',      // Replace with your Service ID
-        'template_omaz1it',     // Replace with your Template ID
+        'service_wsx4nsh',
+        'template_omaz1it',
         {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message
         },
-        'C-1JVduTWhtFYUQHN'       // Replace with your Public Key
+        'C-1JVduTWhtFYUQHN'
       );
 
       if (result.text === 'OK') {
         setFormStatus('success');
         setFormData({ name: '', email: '', message: '' });
-        alert('Message sent successfully! I will get back to you soon.');
       }
     } catch (error) {
       setFormStatus('error');
-      alert('Failed to send message. Please try again or email me directly.');
       console.error('EmailJS Error:', error);
     }
   };
@@ -79,12 +146,12 @@ export default function Portfolio() {
   ];
 
   const skills = [
-    { name: 'JavaScript/React', level: 10 },
-    { name: 'Python', level: 70 },
-    { name: 'Node.js', level: 10 },
-    { name: 'SQL/Databases', level: 75 },
-    { name: 'UI/UX Design', level: 70 },
-    { name: 'C-programming', level: 75 }
+    { name: 'JavaScript/React', level: 10, icon: '⚛️' },
+    { name: 'Python', level: 70, icon: '🐍' },
+    { name: 'Node.js', level: 10, icon: '🟢' },
+    { name: 'SQL/Databases', level: 75, icon: '🗃️' },
+    { name: 'UI/UX Design', level: 70, icon: '🎨' },
+    { name: 'C-programming', level: 75, icon: '⚙️' }
   ];
 
   const experiences = [
@@ -92,7 +159,7 @@ export default function Portfolio() {
       title: 'Berozgar',
       company: 'Filler',
       period: '2022 - Present',
-      description: 'pheri kaam pani kosle dinxa underage lai ta.  '
+      description: 'pheri kaam pani kosle dinxa underage lai ta.'
     },
     {
       title: 'NIST College le chapyo',
@@ -104,18 +171,19 @@ export default function Portfolio() {
       title: 'Baccha Thiye',
       company: 'Filler',
       period: '2018 - 2020',
-      description: ' Moj thyo jiwan ta'
+      description: 'Moj thyo jiwan ta'
     }
   ];
 
   const projects = [
     {
-      title: 'C programmming',
+      title: 'C programming',
       description: 'Just practicing C programming language and its concepts.',
       tools: ['C Programming'],
       results: 'Increased problem-solving skills and self productivity',
       link: '#',
-      github: 'https://github.com/cloudBruhh/C-proramming'
+      github: 'https://github.com/cloudBruhh/C-proramming',
+      image: '🔧'
     },
     {
       title: 'CRUD operation',
@@ -123,7 +191,8 @@ export default function Portfolio() {
       tools: ['MySQL', 'PHP', 'phpMyAdmin'],
       results: 'Learned database management and backend development',
       link: '#',
-      github: 'https://github.com/cloudBruhh/project'
+      github: 'https://github.com/cloudBruhh/project',
+      image: '🗄️'
     },
     {
       title: 'Python Projects',
@@ -131,7 +200,8 @@ export default function Portfolio() {
       tools: ['Python'],
       results: 'Enhanced understanding of Python programming and its applications',
       link: '#',
-      github: 'https://github.com/cloudBruhh/Python-programming-'
+      github: 'https://github.com/cloudBruhh/Python-programming-',
+      image: '🐍'
     },
     {
       title: 'This Portfolio Website',
@@ -139,9 +209,30 @@ export default function Portfolio() {
       tools: ['React', 'Tailwind CSS'],
       results: 'Well-structured and visually appealing portfolio website, simplistic and aesthetic design',
       link: '#',
-      github: 'https://github.com/cloudBruhh/my-portfolio'
+      github: 'https://github.com/cloudBruhh/my-portfolio',
+      image: '🌐'
     }
   ];
+
+  const stats = [
+    { label: 'Projects Completed', value: '10+', icon: <Code size={24} /> },
+    { label: 'Technologies Learned', value: '8+', icon: <Sparkles size={24} /> },
+    { label: 'Cups of Coffee', value: '∞', icon: <Award size={24} /> },
+  ];
+
+  // Loading Screen
+  if (isLoading) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+        <div className="text-center">
+          <div className="relative w-20 h-20 mx-auto mb-4">
+            <div className={`absolute inset-0 rounded-full border-4 border-t-blue-600 animate-spin ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}></div>
+          </div>
+          <p className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
@@ -456,6 +547,18 @@ export default function Portfolio() {
           © 2026 Ashwin Thapa. Built with React & Tailwind CSS.
         </p>
       </footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className={`fixed bottom-4 right-4 p-3 rounded-full transition-all transform hover:scale-110 ${isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+            } shadow-lg`}
+          aria-label="Scroll to top"
+        >
+          <ChevronUp size={24} />
+        </button>
+      )}
     </div>
   );
 }
