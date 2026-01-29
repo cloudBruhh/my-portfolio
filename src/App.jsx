@@ -298,7 +298,7 @@ export default function Portfolio() {
     try {
       const result = await emailjs.send(
         'service_wsx4nsh',
-        'template_omaz1it',
+        'template_3tfv9y4',
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -560,6 +560,15 @@ export default function Portfolio() {
             <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Seeking opportunities to leverage my expertise in full-stack development to build innovative products that solve real-world problems. Passionate about mentoring, continuous learning, and contributing to open-source communities.
             </p>
+          </div>
+          {/* Additional Info */}
+          <div className="flex items-center gap-2 mt-4">
+            <MapPin size={20} className="text-blue-500" />
+            <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Based in Nepal</span>
+          </div>
+          <div className="flex items-center gap-2 mt-2">
+            <Clock size={20} className="text-blue-500" />
+            <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>The time is yet to come</span>
           </div>
         </div>
       </section>
