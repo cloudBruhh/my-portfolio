@@ -396,6 +396,15 @@ export default function Portfolio() {
       github: 'https://github.com/cloudBruhh/my-portfolio',
       image: '🌐'
     }
+    {
+    title: 'Movie site clone',
+      description: 'A movie site clone built using React and Tailwind CSS, showcasing a visually appealing and responsive design.',
+      tools: ['React', 'Tailwind CSS'],
+      results: 'A visually appealing and responsive movie site clone, demonstrating proficiency in React and Tailwind CSS.Also u cant watch movies there but u can watch trailer(Cuz its illegal)',
+      link: 'https://movie-site-clone-git-main-cloudbruhhs-projects.vercel.app/',
+      github: 'https://github.com/cloudBruhh/movie-site-clone',
+      image: '🎬'
+    }
   ];
 
   const stats = [
